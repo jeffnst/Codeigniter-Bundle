@@ -1,0 +1,21 @@
+{
+    "name": "dsv/ci-bundle",
+    "description": "Codeigniter-Bundle implements Hierarchical Model View Controller(HMVC) pattern into Codeigniter Framework",
+    "type": "codeigniter-third-party",
+    "require": {
+        "composer/installers": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Sosa Valdes",
+            "email": "david.sosa.valdes@gmail.com"
+        }
+    ],
+   "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "installer-name": "CI-Bundle"	
+   }
+}
