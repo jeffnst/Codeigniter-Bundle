@@ -6,9 +6,9 @@ if (! function_exists('add_bundle_package'))
 	function add_bundle_package($name)
 	{
 		$ci =& get_instance();
-		if (is_dir(BUNDLEPATH.$name)) 
+		if (is_dir($name)) 
 		{
-			$ci->load->add_package_path(BUNDLEPATH.$name);
+			$ci->load->add_package_path($name);
 		}
 	}
 }
