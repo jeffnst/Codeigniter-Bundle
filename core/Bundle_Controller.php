@@ -66,7 +66,7 @@ class Bundle_Controller extends CI_Controller
 				case 'drivers':
 					foreach ($packages as $item)
 					{
-						$this->driver($item);
+						$this->load->driver($item);
 					}
 					break;
 
