@@ -424,7 +424,10 @@ if ( ! is_php('5.4'))
 			$CFG->set_item('active_bundle_path', $bundle_path);
 			
 			spl_autoload_register(function($class) use ($bundle_path) {
-				require_once($bundle_path.'core/'.$class.'.php');
+				if (file_exists($bundle_core_class = $bundle_path.'core/'.$class.'.php')) 
+				{
+					require_once($bundle_core_class);
+				}
 			});
 		}
 	}
