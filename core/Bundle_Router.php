@@ -102,15 +102,11 @@ class Bundle_Router extends CI_Router
 			include(APPPATH.'config/routes.php');
 		}
 
-		if ($this->_bundles['active'] !== FALSE) 
+		if (file_exists($bundle_router = realpath($this->_bundles['path_request'].'../config/routes.php'))) 
 		{
-			if (file_exists($bundle_router = realpath($this->_bundles['path_request'].'../config/routes.php'))) 
-			{
-				include($bundle_router);	
-
-				$this->_bundles['router'] = array_merge($route, $this->_bundles['router']);
-			}
-		}	
+			include($bundle_router);
+			$this->_bundles['router'] = array_merge($route, $this->_bundles['router']);
+		}
 
 		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
 		{

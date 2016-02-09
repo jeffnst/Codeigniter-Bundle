@@ -2,11 +2,6 @@
 
 class Bundle_Controller extends CI_Controller 
 {
-	/**
-	 * Set bundle mark name
-	 * @var string
-	 */
-	protected $_bundle_mark = 'bundles';
 
 	/**
 	 * Autoload listed components
@@ -20,7 +15,6 @@ class Bundle_Controller extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->benchmark->mark($this->_bundle_mark.'_start');
 
 		$this->_autoload();
 
@@ -29,8 +23,7 @@ class Bundle_Controller extends CI_Controller
 		if ($bundle_path = config_item('active_bundle_path'))
 		{
 			add_bundle_package($bundle_path);
-		}	
-		$this->benchmark->mark($this->_bundle_mark.'_end');
+		}
 	}
 
 	/**

@@ -82,7 +82,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 	require_once(BASEPATH.'core/Common.php');
 
-
 /*
  * ------------------------------------------------------
  * Security procedures
@@ -422,21 +421,11 @@ if ( ! is_php('5.4'))
 	{
 		if ($bundle_path !== APPPATH) 
 		{
-			$CFG->set_item('active_bundle_path', $bundle_path);	
+			$CFG->set_item('active_bundle_path', $bundle_path);
 			
-			if (file_exists($bundle_config = $bundle_path.'config/config.php')) 
-			{
-				require($bundle_config);
-
-				is_array($config) && get_config($config);
-			}
-
-			$bundle_core_class = $bundle_path.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
-			
-			if (file_exists($bundle_core_class))
-			{
-				require_once($bundle_core_class);
-			}
+			spl_autoload_register(function($class) use ($bundle_path) {
+				require_once($bundle_path.'core/'.$class.'.php');
+			});
 		}
 	}
 	if (empty($class) OR (! $bundle_class))
