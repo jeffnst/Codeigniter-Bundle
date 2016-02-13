@@ -136,8 +136,9 @@ switch (ENVIRONMENT)
  *---------------------------------------------------------------
  *
  */
-	$bundles_path = 'application/bundles';
 
+	$bundles_path = $application_folder.'/bundles';
+	
 /*
  * --------------------------------------------------------------------
  * DEFAULT CONTROLLER

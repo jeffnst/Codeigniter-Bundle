@@ -4,7 +4,7 @@ UNDER CONSTRUCTION (02/08/2016)
 Codeigniter Bundle
 -----------------
 
-Codeigniter-Bundle implements a Modular pattern into Codeigniter Framework using groups of independent components, typically model, controller and view, arranged in an application modules (sub-directory) that can be dropped into other CodeIgniter applications.
+Codeigniter-Bundle implements a Modular pattern into Codeigniter Framework using groups of independent components, typically model, controller and view, arranged in application modules (sub-directory) that can be dropped into other CodeIgniter applications.
 
 Since the introduction of CodeIgniter 2.0 there has been support for packages built right inside CodeIgniter called *Third-party Application Packages*. This extension adds to this packages the extra functionality they needed for full modular support.
 
