@@ -2,7 +2,6 @@
 
 class Bundle_Controller extends CI_Controller 
 {
-
 	/**
 	 * Autoload listed components
 	 * @var array
@@ -10,28 +9,27 @@ class Bundle_Controller extends CI_Controller
 	public $autoload = array();
 
 	/**
+	 * Constructor
+	 * 
 	 * Call the bundle package
+	 * @return	void
 	 */
 	public function __construct()
 	{
-		parent::__construct();
+		$this->load =& load_class('Loader', 'core');
 
 		$this->_autoload();
+		$this->load->bundle();
 
-		$this->load->helper('bundle');
-		
-		if ($bundle_path = config_item('active_bundle_path'))
-		{
-			add_bundle_package($bundle_path);
-		}
+		log_message('info', 'Bundle Controller Class Initialized');		
+
+		parent::__construct();
 	}
 
 	/**
 	 * Bundle Autoloader
-	 *
+	 * 
 	 * Loads component listed in the $autoload attribute.
-	 *
-	 * @used-by	Bundle_Controller::__construct()
 	 * @return	void
 	 */
 	protected function _autoload()
@@ -43,7 +41,7 @@ class Bundle_Controller extends CI_Controller
 				case 'packages':
 					foreach ($packages as $package_path) 
 					{
-						$this->add_package_path($package_path);
+						$this->load->add_package_path($package_path);
 					}
 					break;
 
@@ -80,6 +78,19 @@ class Bundle_Controller extends CI_Controller
 
 				case 'model':
 					$this->load->model($packages);
+					break;
+				case 'bundles':
+					foreach ($packages as $package => $params) 
+					{
+						if (is_numeric($package)) 
+						{
+							$this->load->bundle($params);
+						}
+						else
+						{
+							$this->load->bundle($package, TRUE, $params);
+						}
+					}
 					break;
 			}
 		}		

@@ -415,20 +415,24 @@ if ( ! is_php('5.4'))
 	 * 	4. Load the Bundle_Core_Controller (optional)
 	 * 	5. Finally load the Bundle_Controller.
 	 */
-	$bundle_class = $RTR->check_bundle_controller($RTR->directory.$class);
+	$bundle_class = $RTR->set_controller($RTR->directory.$class);
 	
-	if ($bundle_path = realpath(dirname($bundle_class).'/..').'/') 
+	if ($bundle_path = $RTR->get_bundle_path()) 
 	{
 		if ($bundle_path !== APPPATH) 
 		{
+			$CFG->set_item('active_bundle', basename($bundle_path));
 			$CFG->set_item('active_bundle_path', $bundle_path);
 			
 			spl_autoload_register(function($class) use ($bundle_path) {
-				require_once($bundle_path.'core/'.$class.'.php');
+				if (file_exists($bundle_core_class = $bundle_path.'core/'.$class.'.php')) 
+				{
+					require_once($bundle_core_class);
+				}
 			});
 		}
 	}
-	if (empty($class) OR (! $bundle_class))
+	if (empty($class) || (! $bundle_class))
 	{
 		$e404 = TRUE;
 	}

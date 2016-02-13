@@ -6,6 +6,8 @@ class Bundle_Config extends CI_Config
 	/**
 	 * Load Config File
 	 *
+	 * Using array merge recursive only with sections_mode.
+	 *
 	 * @param	string	$file			    Configuration file name
 	 * @param	bool	$use_sections		Whether configuration values should be loaded into their own section
 	 * @param	bool	$fail_gracefully	Whether to just return FALSE or display an error message
@@ -53,7 +55,7 @@ class Bundle_Config extends CI_Config
 				}
 				else
 				{
-					$this->config = array_merge_recursive($this->config, $config);
+					$this->config = array_merge($this->config, $config);
 				}
 
 				$this->is_loaded[] = $file_path;

@@ -9,8 +9,9 @@ class Bundle_Router extends CI_Router
 	protected $_bundles = array();
 
 	/**
-	 * [__construct description]
-	 * @param [type] $routing [description]
+	 * Class constructor
+	 * 
+	 * @param array $routing
 	 */
 	public function __construct($routing = NULL)
 	{
@@ -40,7 +41,7 @@ class Bundle_Router extends CI_Router
 	 */
 	protected function _set_bundles()
 	{
-		$this->config->load('bundles', FALSE, TRUE);
+		$this->config->load('bundles', FALSE);
 
 		$this->_bundles['active'] = FALSE;
 
@@ -49,8 +50,8 @@ class Bundle_Router extends CI_Router
 			foreach ($bundles as $key => $value) 
 			{
 				$location = (isset($value['location']))
-					? rtrim(BUNDLEPATH.$value['location'],'/').'/controllers'
-					: rtrim(BUNDLEPATH.$key,'/').'/controllers';
+					? rtrim(BUNDLEPATH.$value['location'],'/').'/'
+					: rtrim(BUNDLEPATH.$key,'/').'/';
 
 				if (! is_dir($location)) 
 				{
@@ -60,13 +61,13 @@ class Bundle_Router extends CI_Router
 				if (isset($value['route'])) 
 				{
 					$this->_bundles['router'][$value['route'].'/(.+)'] = '$1';
-					$this->_bundles['controllers'][$value['route']] = $location;
+					$this->_bundles['paths'][$value['route']] = $location;
 				}
 				else
 				{
 					$p_route = str_replace('bundle', '', strtolower(basename(dirname($location))));
 					$this->_bundles['router']["{$p_route}/(.+)"] = '$1';
-					$this->_bundles['controllers'][$p_route] = $location;
+					$this->_bundles['paths'][$p_route] = $location;
 				}
 				if (isset($value['default']) && $value['default'] !== FALSE) 
 				{
@@ -74,23 +75,35 @@ class Bundle_Router extends CI_Router
 				}
 			}
 		}
+
+		$bundle_name = isset($this->uri->segments[1])
+			? $this->uri->segments[1]
+			: NULL;
 		
 		if ($this->_bundles['active'] !== FALSE) 
 		{
-			$bundle_name = $this->_bundles['active'];
-		}
-		else 
-		{
-			$bundle_name = isset($this->uri->segments[1])
-				? $this->uri->segments[1]
-				: NULL;			
+			$bundle_name = isset($this->_bundles['paths'][$bundle_name])
+				? $bundle_name
+				: $this->_bundles['active'];
 		}
 
-		$this->_bundles['path_request'] = (isset($this->_bundles['controllers'][$bundle_name]))
-			? $this->_sanitize_path($this->_bundles['controllers'][$bundle_name]).'/'
-			: APPPATH.'controllers/';
+		$this->_bundles['request'] = (isset($this->_bundles['paths'][$bundle_name]))
+			? $this->_sanitize_path($this->_bundles['paths'][$bundle_name]).'/'
+			: APPPATH;
+		
+		if (is_dir($this->_bundles['request'].'config/')) 
+		{
+			if (! in_array($this->_bundles['request'], $this->config->_config_paths)) 
+			{
+				$this->config->_config_paths[] = $this->_bundles['request'];
+			}
+		}
 	}
 
+	/**
+	 * Set routes
+	 * Set Bundle routes
+	 */
 	protected function _set_routing()
 	{					
 		// Load the routes.php file. It would be great if we could
@@ -102,10 +115,14 @@ class Bundle_Router extends CI_Router
 			include(APPPATH.'config/routes.php');
 		}
 
-		if (file_exists($bundle_router = realpath($this->_bundles['path_request'].'../config/routes.php'))) 
+		if (file_exists($this->_bundles['request'].'config/routes.php')) 
 		{
-			include($bundle_router);
-			$this->_bundles['router'] = array_merge($route, $this->_bundles['router']);
+			include($this->_bundles['request'].'config/routes.php');
+
+			if (isset($route)) 
+			{
+				$this->_bundles['router'] = array_merge($route, $this->_bundles['router']);	
+			}
 		}
 
 		if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/routes.php'))
@@ -183,6 +200,10 @@ class Bundle_Router extends CI_Router
 		}
 	}
 
+	/**
+	 * Set default controller
+	 * Set default bundle controller
+	 */
 	protected function _set_default_controller()
 	{
 		$response = FALSE;
@@ -197,8 +218,7 @@ class Bundle_Router extends CI_Router
 		{
 			$method = 'index';
 		}
-		$path_request = $this->_bundles['path_request'];
-		if (file_exists($path_request.'/'.$this->directory.ucfirst($class).'.php')) 
+		if (file_exists($this->_bundles['request'].'controllers/'.$this->directory.ucfirst($class).'.php')) 
 		{
 			$response = TRUE;
 		}	
@@ -221,7 +241,8 @@ class Bundle_Router extends CI_Router
 	}
 
 	/**
-	 * [_validate_request description]
+	 * Validate controller request
+	 * 
 	 * @param  [type] $segments [description]
 	 * @return [type]           [description]
 	 */
@@ -237,9 +258,9 @@ class Bundle_Router extends CI_Router
 			$test = $this->directory
 				.ucfirst($this->translate_uri_dashes === TRUE ? str_replace('-', '_', $segments[0]) : $segments[0]);
 
-			if (! file_exists($this->_bundles['path_request'].$test.'.php') 
+			if (! file_exists($this->_bundles['request'].'controllers/'.$test.'.php') 
 					&& $directory_override === FALSE 
-					&& is_dir($this->_bundles['path_request'].$this->directory.$segments[0])
+					&& is_dir($this->_bundles['request'].'controllers/'.$this->directory.$segments[0])
 				)
 			{
 					$this->set_directory(array_shift($segments), TRUE);
@@ -253,14 +274,24 @@ class Bundle_Router extends CI_Router
 	}	
 
 	/**
-	 * [check_bundles_controller description]
+	 * [set_controller description]
+	 * 
 	 * @param  [type] $route [description]
 	 * @return [type]        [description]
 	 */
-	public function check_bundle_controller($route)
+	public function set_controller($route)
 	{
-		$test_file = $this->_bundles['path_request'].$route.'.php';
+		$test_file = $this->_bundles['request'].'controllers/'.$route.'.php';
 		return (file_exists($test_file)) ? $test_file : FALSE;
+	}
+
+	/**
+	 * [get_bundle_path description]
+	 * @return [type] [description]
+	 */
+	public function get_bundle_path()
+	{
+		return rtrim(realpath($this->_bundles['request']),'/').'/';
 	}
 
 	/**
