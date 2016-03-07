@@ -18,12 +18,12 @@ Here's a list of key advantages:
 
 ## Inspiration
 
-Codeigniter-Bundle is inspired by this authors:
+**Codeigniter Bundle** is inspired by this authors:
 
 * [wiredesignz/Codeigniter-modular-extensions-hmvc](https://bitbucket.org/wiredesignz/Codeigniter-modular-extensions-hmvc)
 * [jenssegers/Codeigniter-hmvc-modules](https://github.com/jenssegers/Codeigniter-hmvc-modules)
 
-**Codeigniter-Bundle** aims to use all available code from Codeigniter to create a simple but functional modular system.
+**Codeigniter Bundle** aims to use all available code from Codeigniter to create a simple but functional modular system.
 
 ## Features
 
