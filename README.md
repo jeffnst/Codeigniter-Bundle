@@ -29,7 +29,7 @@ Here's a list of key advantages:
 
 * Autoload packages (libraries, driver, helper files, custom config files, language files and models).
 * Extend your controllers, models, helpers and libraries.
-* Create/Run migrations per bundle using [CLI Craftsman](https://github.com/davidsosavaldes/Craftsman).
+* Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (like css, js, images, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
 ## How to use
@@ -78,7 +78,7 @@ Resources may be cross loaded between modules. Example:
 * Access the URL `/index.php/welcome`
 * Everything looks good? Good...let's continue
 
-## Create a new Bundle
+### Create a new Bundle
 
 * Create a bundle directory structure `application/bundles/WelcomeBundle/controllers`
 * Move controller `application/controllers/Welcome.php` to `application/bundles/WelcomeBundle/controllers/Welcome.php`
