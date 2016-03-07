@@ -1,27 +1,59 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package	CodeIgniter
+ * @author	EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	http://codeigniter.com
+ * @since	Version 1.0.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bundle_Loader extends CI_Loader 
+/**
+ * Bundle Loader Class
+ *
+ * Extends CI_Loader class for implement a Modular Environment.
+ *
+ * @package		CodeIgniter
+ * @subpackage	Libraries
+ * @category	Loader
+ * @author		David Sosa Valdes
+ * @link		https://github.com/davidsosavaldes/Codeigniter-Bundle
+ */
+class Bundle_Loader extends CI_Loader
 {
-	/**
-	 * CI-Hooks class
-	 * @var object
-	 */
-	protected $_hooks;
-
-	/**
-	 * Class Constructor
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->_hooks =& load_class('Hooks', 'core');
-	}
-
 	/**
 	 * CI Autoloader
 	 *
 	 * Loads component listed in the config/autoload.php file.
-	 * Loads component listed in the <active bundle>/config/autoload.php file
 	 *
 	 * @used-by	CI_Loader::initialize()
 	 * @return	void
@@ -38,21 +70,30 @@ class Bundle_Loader extends CI_Loader
 			include(APPPATH.'config/'.ENVIRONMENT.'/autoload.php');
 		}
 
-		if (file_exists(BUNDLEPATH.config_item('active_bundle').'/config/autoload.php')) 
+		isset($autoload) && $this->_set_autoloader($autoload);
+	}
+
+	public function autoloader($path = '')
+	{
+		if (file_exists($path.'config/autoload.php'))
 		{
-			include(BUNDLEPATH.config_item('active_bundle').'/config/autoload.php');
+			include($path.'config/autoload.php');
 		}
 
-		if (file_exists(BUNDLEPATH.config_item('active_bundle').'/config/'.ENVIRONMENT.'/autoload.php')) 
+		if (file_exists($path.'config/'.ENVIRONMENT.'/autoload.php'))
 		{
-			include(BUNDLEPATH.config_item('active_bundle').'/config/'.ENVIRONMENT.'/autoload.php');
+			include($path.'config/'.ENVIRONMENT.'/autoload.php');
 		}
 
-		if ( ! isset($autoload))
-		{
-			return;
-		}
+		isset($autoload) && $this->_set_autoloader($autoload);		
+	}
 
+	/**
+	 * [_set_autoloader description]
+	 * @param array $autoload [description]
+	 */
+	protected function _set_autoloader(array $autoload)
+	{
 		// Autoload packages
 		if (isset($autoload['packages']))
 		{
@@ -63,7 +104,7 @@ class Bundle_Loader extends CI_Loader
 		}
 
 		// Load any custom config file
-		if (count($autoload['config']) > 0)
+		if (isset($autoload['config']) && count($autoload['config']) > 0)
 		{
 			foreach ($autoload['config'] as $val)
 			{
@@ -107,23 +148,7 @@ class Bundle_Loader extends CI_Loader
 		if (isset($autoload['model']))
 		{
 			$this->model($autoload['model']);
-		}
-
-		// Autoload Bundles
-		if (isset($autoload['bundles'])) 
-		{
-			foreach ($autoload['bundles'] as $package => $params) 
-			{
-				if (is_numeric($package)) 
-				{
-					$this->bundle($params);
-				}
-				else
-				{
-					$this->bundle($package, TRUE, $params);
-				}
-			}
-		}
+		}		
 	}
 
 	/**
@@ -131,126 +156,26 @@ class Bundle_Loader extends CI_Loader
 	 * 
 	 * @param  string  $path         Bundle name
 	 * @param  boolean $view_cascade View cascade method active
-	 * @param  array   $params 		 Bundle params passed with autoload.php file
 	 * @return object
 	 */
-	public function bundle($path = '', $view_cascade = TRUE, array $params = array())
+	public function bundle($path, $view_cascade = TRUE)
 	{
-		if ((! empty($path) && is_dir($bundle_path = BUNDLEPATH.$path))) 
+		if (is_dir($path = rtrim(BUNDLEPATH . str_replace(BUNDLEPATH, '', $path),'/').'/')) 
 		{
-			$this->add_package_path($bundle_path, $view_cascade);
-			spl_autoload_register(function($class) use ($bundle_path) 
+			$this->add_package_path($path, $view_cascade);
+
+			spl_autoload_register(function($class) use ($path) 
 			{
-				if (file_exists($bundle_core_class = $bundle_path.'/core/'.$class.'.php')) 
+				if (file_exists($path.'core/'.$class.'.php')) 
 				{
-					require_once($bundle_core_class);
+					require_once($path.'core/'.$class.'.php');
 				}
 			});
-		}
-		else 
-		{
-			// We don't autoload the core classes here 
-			$bundle_path = BUNDLEPATH.config_item('active_bundle');
-			$this->add_package_path($bundle_path, $view_cascade);
-			$params['enable_hooks'] = TRUE;
-		}
-		if (isset($params['enable_hooks']) && $params['enable_hooks'] !== FALSE) 
-		{
-			$this->_hooks->add_hooks($bundle_path);	
 		}
 		return $this;
 	}
 
-	/**
-	 * Internal CI Library Instantiator
-	 *
-	 * @used-by	CI_Loader::_ci_load_stock_library()
-	 * @used-by	CI_Loader::_ci_load_library()
-	 *
-	 * @param	string		$class		Class name
-	 * @param	string		$prefix		Class name prefix
-	 * @param	array|null|bool	$config		Optional configuration to pass to the class constructor:
-	 *						FALSE to skip;
-	 *						NULL to search in config paths;
-	 *						array containing configuration data
-	 * @param	string		$object_name	Optional object name to assign to
-	 * @return	void
-	 */
-	protected function _ci_init_library($class, $prefix, $config = FALSE, $object_name = NULL)
-	{
-		// Is there an associated config file for this class? Note: these should always be lowercase
-		if ($config === NULL)
-		{
-			// Fetch the config paths containing any package paths
-			$config_component = $this->_ci_get_component('config');
-
-			if (is_array($config_component->_config_paths))
-			{
-				foreach ($config_component->_config_paths as $path)
-				{
-					// We test for both uppercase and lowercase, for servers that
-					// are case-sensitive with regard to file names. Load global first,
-					// override with environment next
-					if (file_exists($path.'config/'.strtolower($class).'.php'))
-					{
-						include($path.'config/'.strtolower($class).'.php');
-					}
-					elseif (file_exists($path.'config/'.ucfirst(strtolower($class)).'.php'))
-					{
-						include($path.'config/'.ucfirst(strtolower($class)).'.php');
-					}
-
-					if (file_exists($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php'))
-					{
-						include($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php');
-					}
-					elseif (file_exists($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php'))
-					{
-						include($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php');
-					}
-				}
-			}
-		}
-
-		$class_name = $prefix.$class;
-
-		// Is the class name valid?
-		if ( ! class_exists($class_name, FALSE))
-		{
-			log_message('error', 'Non-existent class: '.$class_name);
-			show_error('Non-existent class: '.$class_name);
-		}
-
-		// Set the variable name we will assign the class to
-		// Was a custom class name supplied? If so we'll use it
-		if (empty($object_name))
-		{
-			$object_name = strtolower($class);
-			if (isset($this->_ci_varmap[$object_name]))
-			{
-				$object_name = $this->_ci_varmap[$object_name];
-			}
-		}
-
-		// Don't overwrite existing properties
-		$CI =& get_instance();
-		if (isset($CI->$object_name))
-		{
-			if ($CI->$object_name instanceof $class_name)
-			{
-				log_message('debug', $class_name." has already been instantiated as '".$object_name."'. Second attempt aborted.");
-				return;
-			}
-
-			show_error("Resource '".$object_name."' already exists and is not a ".$class_name." instance.");
-		}
-
-		// Save the class name and object name
-		$this->_ci_classes[$object_name] = $class;
-
-		// Instantiate the class
-		$CI->$object_name = isset($config)
-			? new $class_name($config)
-			: new $class_name();
-	}	
 }
+
+/* End of file Bundle_Loader.php */
+/* Location: ./application/core/Bundle_Loader.php */
