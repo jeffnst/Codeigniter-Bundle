@@ -50,6 +50,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Bundle_Hooks extends CI_Hooks
 {
+	/**
+	 * Add new hooks anytime from anywhere
+	 * 
+	 * @param string $path Absolute path (according to CI standards)
+	 */
 	public function add($path = '')
 	{
 		$CFG =& load_class('Config', 'core');
@@ -72,10 +77,37 @@ class Bundle_Hooks extends CI_Hooks
 				return;
 			}
 			// Name collisions
-			$this->hooks = array_merge_recursive($hooks, $this->hooks);
-			$this->enabled = TRUE;							
+			$this->hooks = array_merge_recursive($hook, $this->hooks);
+			$this->enabled = TRUE;
 		}
 		return FALSE;
+	}
+
+	/**
+	 * Run Hook
+	 *
+	 * Runs a particular hook
+	 *
+	 * @param	array	$data	Hook details
+	 * @return	bool	TRUE on success or FALSE on failure
+	 */
+	protected function _run_hook($data)
+	{
+		if (is_array($data)) 
+		{
+			// Prepend BUNDLEPATH to relative path 
+			if (isset($data['bundle']) && $data['bundle'] !== FALSE) 
+			{
+				$repeater = rtrim(str_repeat('../', substr_count(APPPATH, '/')),'/');
+				$r_path = $repeater.BUNDLEPATH.trim($data['filepath'],'/');
+			
+				if (realpath(APPPATH.$r_path)) 
+				{
+					$data['filepath'] = rtrim($r_path,'/').'/';
+				}
+			}
+		}
+		return parent::_run_hook($data);
 	}
 }
 
