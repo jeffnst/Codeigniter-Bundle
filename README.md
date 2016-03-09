@@ -53,6 +53,11 @@ Controllers may be loaded from:
 * `application/controllers` sub-directories.
 * `bundle/controllers` sub-directories.
 
+accordingly to the uri route, here's an example:
+
+* `http://codeigniter.dev/index.php/welcome` -> `application/controllers/welcome`
+* `http://codeigniter.dev/index.php/<bundle_name>/welcome` -> `path/to/bundles/<bundle_name>/welcome`
+
 Models and libraries can also be loaded from sub-directories in their respective application directories.
 
 Resources may be cross loaded between modules. Example:
