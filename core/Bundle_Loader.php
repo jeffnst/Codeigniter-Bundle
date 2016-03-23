@@ -175,6 +175,107 @@ class Bundle_Loader extends CI_Loader
 		return $this;
 	}
 
+	/**
+	 * Add Package Path
+	 *
+	 * Prepends a parent path to the library, model, helper and config
+	 * path arrays.
+	 *
+	 * @see	CI_Loader::$_ci_library_paths
+	 * @see	CI_Loader::$_ci_model_paths
+	 * @see CI_Loader::$_ci_helper_paths
+	 * @see CI_Config::$_config_paths
+	 *
+	 * @param	string	$path		Path to add
+	 * @param 	bool	$view_cascade	(default: TRUE)
+	 * @return	object
+	 */
+	public function add_package_path($path, $view_cascade = TRUE)
+	{
+		$path = rtrim($path, '/').'/';
+
+		array_unshift($this->_ci_library_paths, $path);
+		array_unshift($this->_ci_model_paths, $path);
+		array_unshift($this->_ci_helper_paths, $path);
+
+		$this->_ci_view_paths = array($path.'views/' => $view_cascade) + $this->_ci_view_paths;
+
+		// Add config file path
+		$config =& $this->_ci_get_component('config');
+
+		if (! in_array($path, $config->_config_paths)) 
+		{
+			$config->_config_paths[] = $path;
+		}
+		return $this;
+	}	
+
+		/**
+	 * Internal CI Library Instantiator
+	 *
+	 * @used-by	CI_Loader::_ci_load_stock_library()
+	 * @used-by	CI_Loader::_ci_load_library()
+	 *
+	 * @param	string		$class		Class name
+	 * @param	string		$prefix		Class name prefix
+	 * @param	array|null|bool	$config		Optional configuration to pass to the class constructor:
+	 *						FALSE to skip;
+	 *						NULL to search in config paths;
+	 *						array containing configuration data
+	 * @param	string		$object_name	Optional object name to assign to
+	 * @return	void
+	 */
+	protected function _ci_init_library($class, $prefix, $config = FALSE, $object_name = NULL)
+	{
+		// Is there an associated config file for this class? Note: these should always be lowercase
+		if ($config === NULL)
+		{
+			// Fetch the config paths containing any package paths
+			$config_component = $this->_ci_get_component('config');
+
+			if (is_array($config_component->_config_paths))
+			{
+				$_config = array();
+
+				foreach ($config_component->_config_paths as $path)
+				{
+					// We test for both uppercase and lowercase, for servers that
+					// are case-sensitive with regard to file names. Load global first,
+					// override with environment next
+					if (file_exists($path.'config/'.strtolower($class).'.php'))
+					{
+						include($path.'config/'.strtolower($class).'.php');
+						
+						array_merge($_config, $config);
+					}
+					elseif (file_exists($path.'config/'.ucfirst(strtolower($class)).'.php'))
+					{
+						include($path.'config/'.ucfirst(strtolower($class)).'.php');
+						
+						array_merge($_config, $config);
+					}
+
+					if (file_exists($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php'))
+					{
+						include($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php');
+						
+						array_merge($_config, $config);
+					}
+					elseif (file_exists($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php'))
+					{
+						include($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php');
+						
+						array_merge($_config, $config);
+					}
+				}
+				// Create a copy of config merged files
+				(! empty($_config)) && $config = $_config;
+			}
+		}
+
+		return parent::_ci_init_library($class, $prefix, $config, $object_name);
+	}
+
 }
 
 /* End of file Bundle_Loader.php */
