@@ -71,6 +71,8 @@ class Bundle_Controller extends CI_Controller
 			$this->load->autoloader($bundle_path);
 		}
 		log_message('info','Bundle Controller Initialized');
+		
+		$this->hooks->call_hook('post_bundle_controller_constructor');
 	}
 
 }
