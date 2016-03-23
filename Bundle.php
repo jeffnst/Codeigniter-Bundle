@@ -51,6 +51,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class CI_Bundle
 {
 	/**
+	 * Set default bundle
+	 * @var string
+	 */
+	protected $_default = NULL;
+
+	/**
 	 * Set Bundle ID active.
 	 * @var string
 	 */
@@ -115,7 +121,13 @@ class CI_Bundle
 					isset($config['route'])
 						? rtrim($config['route'],'/')
 						: basename(dirname($location))
-				);				
+				);	
+
+				if (isset($config['default']) && $config['default'] !== FALSE) 
+				{
+					$this->_default = $route;
+				}
+
 				$this->_paths[$route] = $location;
 				$this->_routes[$route.'/(.+)'] = '$1';
 			}
@@ -125,34 +137,44 @@ class CI_Bundle
 			? $URI->segments[1]
 			: NULL;	
 
+		$path = FALSE;
+
 		if (isset($this->_paths[$bundle])) 
 		{
-			$bundle_path = $this->_paths[$bundle];
+			$path = $this->_paths[$bundle];
+		}
+		elseif (isset($this->_paths[$this->_default])) 
+		{
+			$path = $this->_paths[$this->_default];
+		}
 
-			$this->_active = $bundle;
+		if ($path !== FALSE) 
+		{
+			$this->_active = ($this->_default !== NULL)
+				? $this->_default
+				: $bundle;
 
-			$RTR->set_directory($bundle_path, FALSE, TRUE);
-			$EXT->add($bundle_path);
-			$CFG->_config_paths[] = $bundle_path;
+			$RTR->set_directory($path, FALSE, TRUE);
+			$EXT->add($path);
+			$CFG->_config_paths[] = $path;	
 
-			// Update system config if config bundle file exist
-			if (file_exists($config_path = $bundle_path.'config/config.php')) 
+			if (file_exists($config_path = $path.'config/config.php')) 
 			{
-				require($config_path);
+				require($config_path);	
 
-				if (isset($config) && is_array($config))
+			if (isset($config) && is_array($config))
 				{
 					get_config($config);
 				}
-			}			
+			}				
 
 			// Register Bundle Core classes
-			spl_autoload_register(function($class) use ($bundle_path) {
-				if (file_exists($bundle_path.'core/'.$class.'.php')) 
+			spl_autoload_register(function($class) use ($path) {
+				if (file_exists($path.'core/'.$class.'.php')) 
 				{
-					require_once($bundle_path.'core/'.$class.'.php');
+					require_once($path.'core/'.$class.'.php');
 				}
-			});			
+			});	
 		}
 	}
 
