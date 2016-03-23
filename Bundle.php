@@ -135,6 +135,17 @@ class CI_Bundle
 			$EXT->add($bundle_path);
 			$CFG->_config_paths[] = $bundle_path;
 
+			// Update system config if config bundle file exist
+			if (file_exists($config_path = $bundle_path.'config/config.php')) 
+			{
+				require($config_path);
+
+				if (isset($config) && is_array($config))
+				{
+					get_config($config);
+				}
+			}			
+
 			// Register Bundle Core classes
 			spl_autoload_register(function($class) use ($bundle_path) {
 				if (file_exists($bundle_path.'core/'.$class.'.php')) 
