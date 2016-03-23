@@ -107,6 +107,20 @@ class Bundle_Router extends CI_Router
 		parent::_parse_routes();
 	}
 
+	protected function _set_default_controller()
+	{
+		if ($bundle_path = $this->bundle->get_active_path()) 
+		{
+			if (file_exists($bundle_path.'config/routes.php')) 
+			{
+				include($bundle_path.'config/routes.php');
+			}
+			isset($route['default_controller']) && $this->default_controller = $route['default_controller'];
+			unset($route['default_controller'], $route['translate_uri_dashes']);			
+		}
+		return parent::_set_default_controller();
+	}
+
 	/**
 	 * Set directory name
 	 *
@@ -136,7 +150,7 @@ class Bundle_Router extends CI_Router
 		else
 		{
 			$this->directory .= rtrim($dir,'/').'/';
-		}		
+		}
 	}
 
 
