@@ -242,31 +242,28 @@ class Bundle_Loader extends CI_Loader
 					// We test for both uppercase and lowercase, for servers that
 					// are case-sensitive with regard to file names. Load global first,
 					// override with environment next
+					
 					if (file_exists($path.'config/'.strtolower($class).'.php'))
 					{
 						include($path.'config/'.strtolower($class).'.php');
-						
-						array_merge($_config, $config);
-					}
+											}
 					elseif (file_exists($path.'config/'.ucfirst(strtolower($class)).'.php'))
 					{
 						include($path.'config/'.ucfirst(strtolower($class)).'.php');
-						
-						array_merge($_config, $config);
 					}
+
+					isset($config) && array_merge($_config, $config);
 
 					if (file_exists($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php'))
 					{
 						include($path.'config/'.ENVIRONMENT.'/'.strtolower($class).'.php');
-						
-						array_merge($_config, $config);
 					}
 					elseif (file_exists($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php'))
 					{
 						include($path.'config/'.ENVIRONMENT.'/'.ucfirst(strtolower($class)).'.php');
-						
-						array_merge($_config, $config);
 					}
+
+					isset($config) && array_merge($_config, $config);
 				}
 				// Create a copy of config merged files
 				(! empty($_config)) && $config = $_config;
