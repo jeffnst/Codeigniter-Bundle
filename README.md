@@ -27,12 +27,29 @@ Here's a list of key advantages:
 
 ## Features
 
-* Autoload packages (libraries, driver, helper files, custom config files, language files and models).
+* Autoload packages (hooks, libraries, driver, helper files, custom config files, language files and models).
 * Extend your controllers, models, helpers and libraries.
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (like css, js, images, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
 ## How to use
+
+Bundles used in your applications must reside in `path/to/application/bundles` directory and be enabled by registering them in the `path/to/application/config/bundles.php` file.
+
+**Example**
+
+If you have an "admin" bundle located in `path/to/application/bundles/AdminBundle` that you want to handle requests with URIs that begin with "admin", the configuration file will look like this:
+
+    'admin' => array(
+    	'location' => 'AdminBundle',
+    	'route'    => 'admin'
+    ),
+
+Note that the "location" is relative to the "bundles" directory.
+
+Now the bundle will be recognized by Codeigniter and will be able to respond to requests beginning with "admin".
+
+## First steps
 
 To use **Bundle** functionality, controllers must extend the `Bundle_Controller`.
 
@@ -46,12 +63,12 @@ Each bundle may contain a `config/routes.php` file where routes and a default co
     <?php
     $route['<bundle_name>'] = '<controller_name>';
 
-## Observations
+### Observations
 
-Controllers may be loaded from: 
+After CI-Bundle installation, controllers may be loaded from: 
 
-* `application/controllers` sub-directories.
-* `bundle/controllers` sub-directories.
+* `path/to/application/controllers` sub-directories.
+* `path/to/application/bundle/controllers` sub-directories.
 
 accordingly to the uri route, here's an example:
 
@@ -71,28 +88,6 @@ Resources may be cross loaded between modules. Example:
           $this->load->model('fighters_model'); # inside <fighters_bundle>/models/
       }
     }
-    
-
-## Installation
-
-* Create a clean CI project (Check [Codeigniter-installer](https://github.com/davidsosavaldes/Codeigniter-Installer)).
-* Install with composer `dsv/codeigniter-bundle`
-* Set $config[‘base_url’] correctly for your installation
-* Copy Bundle Extensions core files into `application/core`
-* Copy Bundle Config file into `application/config`
-* Access the URL `/index.php/welcome`
-* Everything looks good? Good...let's continue
-
-### Create a new Bundle
-
-* Create a bundle directory structure `application/bundles/WelcomeBundle/controllers`
-* Move controller `application/controllers/Welcome.php` to `application/bundles/WelcomeBundle/controllers/Welcome.php`
-* Access the URL `/index.php/welcome` => shows Welcome to Codeigniter
-* Create directory `application/modules/welcome/views`
-* Move view `application/views/welcome_message.php` to `application/bundles/WelcomeBundle/views/welcome_message.php`
-* Access the URL `/index.php/welcome` => shows Welcome to Codeigniter
-
-You should now have a running **Bundle installation**.
 
 ## Contributions
 
