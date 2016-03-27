@@ -32,6 +32,16 @@ This extension aims to use all available code from Codeigniter to create a simpl
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (css, js, fonts, img, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
+## Installation 
+
+With composer:
+
+    composer require dsv/codeigniter-bundle
+
+After installaltion run the post install command:
+
+    php vendor/bin/ci-bundle install:post
+
 ## How to use
 
 Bundles used in your applications must reside in `path/to/application/bundles` directory and be enabled by registering them in the `path/to/application/config/bundles.php` file.
