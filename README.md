@@ -38,7 +38,7 @@ With composer:
 
     composer require dsv/codeigniter-bundle
 
-After installaltion run the post install command:
+After installation run the `post install command`:
 
     php vendor/bin/ci-bundle install:post
 
