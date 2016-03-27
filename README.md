@@ -30,7 +30,7 @@ Here's a list of key advantages:
 * Autoload packages (hooks, libraries, driver, helper files, custom config files, language files and models).
 * Extend your controllers, models, helpers and libraries.
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
-* Create templates and assets (like css, js, images, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
+* Create templates and assets (css, js, fonts, img, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
 ## How to use
 
