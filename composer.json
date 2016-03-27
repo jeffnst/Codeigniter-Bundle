@@ -30,12 +30,7 @@
             "CI_Bundle\\Install\\": "src/"
         }
     },
-    "bin": ["bin/ci-bundle"],   
-    "scripts": {
-        "post-package-install": [
-            "php vendor/bin/ci-bundle install:post"
-        ]
-    },
+    "bin": ["bin/ci-bundle"]
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
