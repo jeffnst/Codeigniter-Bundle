@@ -4,7 +4,7 @@
 require('vendor/autoload.php');
 
 use Symfony\Component\Console\Application;
-use CI_Bundle\Commands\Install\Post;
+use CI_Bundle\Install\Commands\Post;
 
 /**
  * CLI Codeigniter Bundle Installer
