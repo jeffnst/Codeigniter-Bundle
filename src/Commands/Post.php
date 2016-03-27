@@ -87,34 +87,28 @@ class Post extends Command
         try 
         {
             $this->section('Core Files');
-            
             $this->listing($core_files);    
 
             if ($this->confirm('Copy core files to ['.$app_core_path.']?')) 
             {
                 foreach ($core_files as $file) 
                 {
-                    if (! $filesystem->copy($file, $app_core_path.basename($file))); 
-                    {
-                        $this->warning('['.basename($file).'] Ignored...');
-                    }
+                    $filesystem->copy($file, $app_core_path.basename($file)); 
                 }
+
                 $this->success('Core files moved!');
             }   
 
-            $this->section('Config Files'); 
-
+            $this->section('Config Files');
             $this->listing($config_files);    
 
             if ($this->confirm('Move config files to ['.$app_config_path.']?')) 
             {
                 foreach ($config_files as $file) 
                 {
-                    if (! $filesystem->copy($file, $app_config_path.basename($file))); 
-                    {
-                        $this->warning('['.basename($file).'] Ignored...');
-                    }
-                }                
+                    $filesystem->copy($file, $app_config_path.basename($file)); 
+                }  
+
                 $this->success('Config files moved!');
             }
 
@@ -132,7 +126,9 @@ class Post extends Command
                             str_replace('"', "'", $block), 
                             $_config
                         )
-                    );                    
+                    );
+                    
+                    $this->success('Bundle subclass prefix added to config!');                  
                 }
             }
             else
@@ -146,19 +142,14 @@ class Post extends Command
             {
                 if ($this->confirm('Create the directory ['.$app_bundle_path.']')) 
                 {
-                    if ($filesystem->mkdir($app_bundle_path)) 
-                    {
-                         $this->success('Bundle directory created!');
-                    }
-                    else
-                    {
-                         $this->warning("Bundle directory couldn't be created!");
-                    }
+                    $filesystem->mkdir($app_bundle_path);
+                    
+                    $this->success('Bundle directory created!');
                 }            
             }
             else
             {
-                $this->warning('Bundle directory already exist!');
+                $this->warning('Bundle directory already exist...');
             }
         } 
         catch (IOExceptionInterface $e) 
