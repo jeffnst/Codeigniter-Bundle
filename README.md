@@ -1,4 +1,4 @@
-Codeigniter Bundle (BETA)
+Codeigniter Bundle
 -------------------------
 
 **Codeigniter Bundle** implements a simple *Modular Pattern* into Codeigniter Framework using groups of independent components, typically model, controller and view, arranged in application modules (sub-directory) that can be dropped into other Codeigniter applications.
