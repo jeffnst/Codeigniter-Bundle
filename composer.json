@@ -1,6 +1,6 @@
 {
-    "name": "dsv/ci-bundle",
-    "description": "CI-Bundle implements Modular Model View Controller(MMVC) pattern into Codeigniter Framework",
+    "name": "dsv/codeigniter-bundle",
+    "description": "Codeigniter-Bundle implements Modular Model View Controller(MMVC) pattern into Codeigniter Framework",
     "type": "codeigniter-third-party",
     "require": {
         "php": ">=5.4.0",
