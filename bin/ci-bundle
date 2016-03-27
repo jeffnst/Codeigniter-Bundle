@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+require('vendor/autoload.php');
+
+use Symfony\Component\Console\Application;
+use CI_Bundle\Commands\Install\Post;
+
+/**
+ * CLI Codeigniter Bundle Installer
+ *
+ * @author     David Sosa Valdes <https://github.com/davidsosavaldes>
+ * @license    MIT License
+ * @link       https://github.com/davidsosavaldes/Craftsman
+ * @copyright  Copyright (c) 2016, David Sosa Valdes.
+ */
+
+// Set to run indefinitely if needed
+set_time_limit(0);
+
+// Codeigniter default path
+define('APPPATH', dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR);
+// CI-Bundle installation path
+define('BUNDLEPATH',dirname(__DIR__).DIRECTORY_SEPARATOR);
+
+// Set the commands
+$commands = array(
+	new Post()
+);
+
+$application = new Application('CI-Bundle', '1.0.0');
+// Add the default commands
+foreach ($commands as $key => $command) {
+	$application->add($command);
+}
+$application->run();

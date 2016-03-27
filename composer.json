@@ -1,21 +1,36 @@
 {
     "name": "dsv/ci-bundle",
-    "description": "Codeigniter-Bundle implements Hierarchical Model View Controller(HMVC) pattern into Codeigniter Framework",
+    "description": "CI-Bundle implements Modular Model View Controller(MMVC) pattern into Codeigniter Framework",
     "type": "codeigniter-third-party",
     "require": {
+        "php": ">=5.4.0",
+        "symfony/console": "^3.0",
+        "symfony/filesystem": "^3.0",
+        "symfony/process": "^3.0",        
         "composer/installers": "^1.0"
     },
-    "license": "MIT",
     "authors": [
         {
             "name": "David Sosa Valdes",
             "email": "david.sosa.valdes@gmail.com"
         }
     ],
-   "extra": {
+    "license": "MIT",
+    "autoload" :{
+        "psr-0": {
+            "": "src/"
+        }
+    },
+    "bin": ["bin/ci-bundle"],   
+    "scripts": {
+        "post-package-install": [
+            "php vendor/bin/ci-bundle install:post"
+        ]
+    },
+    "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         },
-        "installer-name": "CI-Bundle"	
-   }
+        "installer-name": "CI-Bundle"   
+   },      
 }

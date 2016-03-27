@@ -137,8 +137,6 @@ class CI_Bundle
 			? $URI->segments[1]
 			: NULL;	
 
-		$path = FALSE;
-
 		if (isset($this->_paths[$bundle])) 
 		{
 			$path = $this->_paths[$bundle];
@@ -146,6 +144,10 @@ class CI_Bundle
 		elseif (isset($this->_paths[$this->_default])) 
 		{
 			$path = $this->_paths[$this->_default];
+		}
+		else
+		{
+			$path = FALSE;
 		}
 
 		if ($path !== FALSE) 
@@ -181,7 +183,7 @@ class CI_Bundle
 	/**
 	 * Get absolute path from the active bundle
 	 * 
-	 * @return mix Returns false when does not exist
+	 * @return mix Returns false when path does not exist
 	 */
 	public function get_active_path()
 	{
@@ -192,7 +194,7 @@ class CI_Bundle
 
 	/**
 	 * Get aditional bundle routes used by CI-Router
-	 *
+	 * 
 	 * @return array
 	 */
 	public function get_routes()
