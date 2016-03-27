@@ -30,7 +30,7 @@
             "CI_Bundle\\Install\\": "src/"
         }
     },
-    "bin": ["bin/ci-bundle"]
+    "bin": ["bin/ci-bundle"],
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
