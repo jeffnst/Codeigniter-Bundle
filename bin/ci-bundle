@@ -19,7 +19,7 @@ use CI_Bundle\Install\Commands\Post;
 set_time_limit(0);
 
 // Codeigniter default path
-define('APPPATH', dirname(dirname(__DIR__)).DIRECTORY_SEPARATOR);
+define('APPPATH', dirname(dirname(dirname(__DIR__))).DIRECTORY_SEPARATOR);
 // CI-Bundle installation path
 define('BUNDLEPATH',dirname(__DIR__).DIRECTORY_SEPARATOR);
 
