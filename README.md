@@ -7,7 +7,7 @@ Since the introduction of Codeigniter v2.0 there has been support for packages b
 
 ## Why should I use Bundles?
 
-Every Codeigniter proyect development process starts slow because there is so much configuration to do before you can start writing the actual code. 
+Every Codeigniter project development process starts slow because there is so much configuration to do before you can start writing the actual code. 
 
 Here's a list of key advantages:
 
@@ -18,7 +18,7 @@ Here's a list of key advantages:
 
 ## Inspiration
 
-**Codeigniter Bundle** is inspired by this authors:
+**Codeigniter Bundle** is inspired by this author's:
 
 * [wiredesignz/Codeigniter-modular-extensions-hmvc](https://bitbucket.org/wiredesignz/Codeigniter-modular-extensions-hmvc)
 * [jenssegers/Codeigniter-hmvc-modules](https://github.com/jenssegers/Codeigniter-hmvc-modules)
