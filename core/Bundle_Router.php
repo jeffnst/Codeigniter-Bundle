@@ -94,8 +94,6 @@ class Bundle_Router extends CI_Router
 	{
 		if ($bundle_path = $this->bundle->get_active_path()) 
 		{
-			$this->routes = array_merge($this->bundle->get_routes() ,$this->routes);
-
 			if (file_exists($bundle_path.'config/routes.php')) 
 			{
 				include($bundle_path.'config/routes.php');
@@ -103,12 +101,11 @@ class Bundle_Router extends CI_Router
 			// Validate & get reserved routes
 			if (isset($route) && is_array($route))
 			{
-				$this->routes = array_merge($route, $this->routes);
-			}
+				$this->routes = array_merge($route, $this->bundle->get_routes() ,$this->routes);
+			}						
 		}
 		parent::_parse_routes();
 	}
-
 
 	protected function _set_default_controller()
 	{
