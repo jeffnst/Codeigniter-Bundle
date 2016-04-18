@@ -57,9 +57,7 @@ class Bundle_Hooks extends CI_Hooks
 	 */
 	public function add($path = '')
 	{
-		$CFG =& load_class('Config', 'core');
-
-		if ($CFG->item('enable_hooks') !== FALSE) 
+		if (config_item('enable_hooks') !== FALSE) 
 		{
 			$path = rtrim($path, '/');
 
@@ -95,15 +93,17 @@ class Bundle_Hooks extends CI_Hooks
 	{
 		if (is_array($data)) 
 		{
-			// Prepend BUNDLEPATH to relative path 
-			if (isset($data['bundle']) && $data['bundle'] !== FALSE) 
-			{
-				$repeater = rtrim(str_repeat('../', substr_count(APPPATH, '/')),'/');
-				$r_path = $repeater.BUNDLEPATH.trim($data['filepath'],'/');
+			$a_path = APPPATH.trim($data['filepath'],'/').'/'.$data['filename'];
 			
-				if (realpath(APPPATH.$r_path)) 
+			if (! file_exists($a_path)) 
+			{
+				// Let's try to load a hook outside
+				$repeater = rtrim(str_repeat('../', substr_count(APPPATH, '/')),'/');
+				$b_path = $repeater.'/'.trim($data['filepath'],'/');
+
+				if (realpath(APPPATH.$b_path)) 
 				{
-					$data['filepath'] = rtrim($r_path,'/').'/';
+					$data['filepath'] = rtrim($b_path,'/').'/';
 				}
 			}
 		}
