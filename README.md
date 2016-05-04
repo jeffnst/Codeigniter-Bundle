@@ -38,7 +38,7 @@ With composer:
 
     composer require dsv/codeigniter-bundle
 
-After installation run the `post install command`:
+After installation run the `post-install-command`:
 
     php vendor/bin/ci-bundle install:post
 
@@ -68,34 +68,32 @@ To use **Bundle** functionality, controllers must extend the `Bundle_Controller`
 
 <!-- All controllers can have an `$autoload` attribute, which holds an array of items loaded in the constructor. This can be used together with `module/config/autoload.php`, however using the $autoload attribute only works for that specific controller. -->
 
-Each bundle may contain a `config/routes.php` file where routes and a default controller can be defined for that module using:
+Each bundle may contain a `config/routes.php` file where routes and a default controller can be defined using:
 
     <?php
     $route['<bundle_name>'] = '<controller_name>';
 
-### Observations
-
-After CI-Bundle installation, controllers may be loaded from: 
+After `CI-Bundle` installation, controllers may be loaded from: 
 
 * `path/to/application/controllers` sub-directories.
 * `path/to/application/bundle/controllers` sub-directories.
 
-accordingly to the uri route, here's an example:
+accordingly to the URI route:
 
 * `http://codeigniter.dev/index.php/welcome` -> `application/controllers/welcome`
 * `http://codeigniter.dev/index.php/<bundle_name>/welcome` -> `path/to/bundles/<bundle_name>/welcome`
 
 Models and libraries can also be loaded from sub-directories in their respective application directories.
 
-Resources may be cross loaded between modules. Example:
+Resources may be cross loaded between bundles:
 
     <?php
     class Foo extends Bundle_Controller 
     {
       function index()
       {
-          $this->load->bundle('<fighters_bundle>');
-          $this->load->model('fighters_model'); # inside <fighters_bundle>/models/
+          $this->load->bundle('fightersBundle');
+          $this->load->model('fighters_model'); # inside path/to/bundles/fightersBundle/models/fighters_model
       }
     }
 
