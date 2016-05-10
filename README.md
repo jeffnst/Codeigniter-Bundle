@@ -41,6 +41,8 @@ With composer:
 After installation run the `post-install-command`:
 
     php vendor/bin/ci-bundle install:post
+    
+[![asciicast](https://asciinema.org/a/45176.png)](https://asciinema.org/a/45176)
 
 ## How to use
 
