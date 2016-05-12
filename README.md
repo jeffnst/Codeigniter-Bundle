@@ -32,6 +32,12 @@ This extension aims to use all available code from Codeigniter to create a simpl
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (css, js, fonts, img, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
+## How does work
+
+In this simple diagram you can see how Codeigniter Bundle works with the Codeigniter Framework:
+
+![CI-Bundle](https://www.dropbox.com/s/s5s4f7hpjucwmhz/Codeigniter-Bundle.png?dl=1)
+
 ## Installation 
 
 With composer:
