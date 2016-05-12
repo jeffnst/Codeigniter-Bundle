@@ -27,7 +27,7 @@ This extension aims to use all available code from Codeigniter to create a simpl
 
 ## Features
 
-* Autoload packages (hooks, libraries, driver, helper files, custom config files, language files and models).
+* Autoload packages (core, hooks, libraries, driver, helper files, custom config files, language files and models).
 * Extend your controllers, models, helpers and libraries.
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (css, js, fonts, img, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
@@ -67,6 +67,18 @@ To use **Bundle** functionality, controllers must extend the `Bundle_Controller`
 
     <?php
     class Foo extends Bundle_Controller {}
+
+You can also extend the core controller class with a proper name:
+
+    <?php
+    # Reside in path/to/bundle/FooBundle/core/Some_Controller.php
+    class Some_Controller extends Bundle_Controller {}
+    
+and then your child classes extend that core:
+
+    <?php
+    # Reside in path/to/bundle/FooBundle/controllers/Foo.php
+    class Foo_Controller extends Some_Controller {}
 
 <!-- All controllers can have an `$autoload` attribute, which holds an array of items loaded in the constructor. This can be used together with `module/config/autoload.php`, however using the $autoload attribute only works for that specific controller. -->
 
