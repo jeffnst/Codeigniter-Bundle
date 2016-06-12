@@ -27,12 +27,12 @@ This extension aims to use all available code from Codeigniter to create a simpl
 
 ## Features
 
-* Autoload packages (core, hooks, libraries, driver, helper files, custom config files, language files and models).
-* Extend your controllers, models, helpers and libraries.
+* Autoload packages (models, hooks, libraries, drivers, helpers, custom config files and language files).
+* Extend core controllers, models, helpers and libraries.
 * Create/Run migrations per bundle using [Craftsman](https://github.com/davidsosavaldes/Craftsman).
 * Create templates and assets (css, js, fonts, img, etc) per bundle using [Attire](https://github.com/davidsosavaldes/Attire).
 
-## How does work
+## How does it work?
 
 In this simple diagram you can see how Codeigniter Bundle works with the Codeigniter Framework:
 
@@ -50,9 +50,9 @@ After installation run the `post-install-command`:
     
 [![asciicast](https://asciinema.org/a/45176.png)](https://asciinema.org/a/45176)
 
-## How to use
+## How to use it?
 
-Bundles used in your applications must reside in `path/to/application/bundles` directory and be enabled by registering them in the `path/to/application/config/bundles.php` file.
+Bundles used in your applications must reside in `path/to/application/bundles` directory and be enabled by registering them in `path/to/application/config/bundles.php` file.
 
 **Example**
 
@@ -85,8 +85,6 @@ and then your child classes extend that core:
     <?php
     # Reside in path/to/bundle/FooBundle/controllers/Foo.php
     class Foo_Controller extends Some_Controller {}
-
-<!-- All controllers can have an `$autoload` attribute, which holds an array of items loaded in the constructor. This can be used together with `module/config/autoload.php`, however using the $autoload attribute only works for that specific controller. -->
 
 Each bundle may contain a `config/routes.php` file where routes and a default controller can be defined using:
 
