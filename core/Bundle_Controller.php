@@ -50,11 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Bundle_Controller extends CI_Controller 
 {
-	/**
-	 * Bundle class
-	 * @var object
-	 */
-	protected $bundle;
+	protected static $path;
 
 	/**
 	 * Class constructor
@@ -62,13 +58,11 @@ class Bundle_Controller extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->bundle =& load_class('Bundle', 'third_party/CI-Bundle');
-
 		//Check the active bundle path and load all the components
-		if ($bundle_path = $this->bundle->get_active_path()) 
+		if (self::$path = $this->bundle->get_active_path()) 
 		{
-			$this->load->bundle($bundle_path);
-			$this->load->autoloader($bundle_path);
+			$this->load->bundle(self::$path);
+			$this->load->autoloader(self::$path);
 		}
 		log_message('info','Bundle Controller Initialized');
 		

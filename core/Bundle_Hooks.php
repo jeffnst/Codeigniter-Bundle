@@ -76,7 +76,7 @@ class Bundle_Hooks extends CI_Hooks
 			}
 			// Name collisions
 			$this->hooks = array_merge_recursive($hook, $this->hooks);
-			$this->enabled = TRUE;
+			return $this->enabled = TRUE;
 		}
 		return FALSE;
 	}
